@@ -17,23 +17,23 @@ class Start:
         self.mystery_instructions = Label(self.start_frame, font=("Verdana", "10", "italic"),
                                           text="Please enter a dollar amount (between $5 and $50)"
                                           " in the box below. Then choose the stakes. The higher"
-                                          " the stakes, the more you can win!", wrap=275, justify=LEFT, padx=10, pady=10)
+                                          " the stakes, the more you can win!", wrap=300, justify=LEFT, padx=10, pady=10)
         self.mystery_instructions.grid(row=1)
 
         # Entry box (row=2)
         self.entry_error_frame = Frame(self.start_frame, width=200)
-        self.entry_error_frame.grid(row=2)
+        self.entry_error_frame.grid(row=3)
         
         self.start_amount_entry = Entry(self.start_frame, font=("Verdana", "19", "bold"))
         self.start_amount_entry.grid(row=2)
 
         self.amount_error_label = Label(self.entry_error_frame, fg="maroon",
-                                        text="test", font="Verdana 10 bold", wrap=275, justify=LEFT)
+                                        text="", font="Verdana 10 bold", wrap=275, justify=LEFT)
         self.amount_error_label.grid(row=1, columnspan=2, pady=5)
 
         # Button frame (row=3)
         self.stakes_frame = Frame(self.start_frame)
-        self.stakes_frame.grid(row=3)
+        self.stakes_frame.grid(row=4)
 
         # Buttons go here.
         button_font = "Verdana 12 bold"
@@ -55,7 +55,7 @@ class Start:
         # Help button
         self.help_button = Button(self.start_frame, text="How to Play",
                                   bg="#808080", fg="white", font=button_font)
-        self.help_button.grid(row=4, pady=10)
+        self.help_button.grid(row=5, pady=10)
 
     def to_game(self, stakes):
         starting_balance = self.start_amount_entry.get()

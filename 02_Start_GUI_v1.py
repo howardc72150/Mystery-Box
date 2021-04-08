@@ -28,7 +28,7 @@ class Start:
         self.start_amount_entry.grid(row=2)
 
         self.amount_error_label = Label(self.entry_error_frame, fg="maroon",
-                                        text="", font="Verdana 10 bold", wrap=275, justify=LEFT)
+                                        text="test", font="Verdana 10 bold", wrap=275, justify=LEFT)
         self.amount_error_label.grid(row=1, columnspan=2, pady=5)
 
         # Button frame (row=3)

@@ -65,11 +65,6 @@ class Start:
         self.medium_stakes_button.config(state=DISABLED)
         self.high_stakes_button.config(state=DISABLED)
 
-        # Help button
-        self.help_button = Button(self.start_frame, text="How to Play",
-                                  bg="#808080", fg="white", font=button_font)
-        self.help_button.grid(row=5, pady=10)
-
     def check_funds(self):
         starting_balance = self.start_amount_entry.get()
 
@@ -123,7 +118,7 @@ class Start:
     def to_game(self, stakes):
         starting_balance = self.starting_funds.get()
         Game(self, stakes, starting_balance)
-        root.withdraw()
+        self.start_frame.destroy()
 
 class Game: 
     def __init__(self, partner, stakes, starting_balance):

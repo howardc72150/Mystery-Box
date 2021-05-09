@@ -158,7 +158,7 @@ class Game:
         box_width = 5
         self.box_frame = Frame(self.game_frame)
         self.box_frame.grid(row=2, pady=10)
-        photo = PhotoImage(file="question.gif")
+        photo = PhotoImage(file="Mystery-Box\question.gif")
 
         self.prize1_label = Label(self.box_frame, image=photo, padx=10, pady=10)
         self.prize2_label = Label(self.box_frame, image=photo, padx=10, pady=10)
@@ -219,19 +219,19 @@ class Game:
             prize_num = random.randint(1,100)
             if 0 < prize_num <= 5:
                 prize_list = "gold\n(${})".format(5*stakes_multiplier)
-                prize = PhotoImage(file="gold_low.gif")
+                prize = PhotoImage(file="Mystery-Box\gold_low.gif")
                 round_winnings += 5*stakes_multiplier
             elif 5 < prize_num <= 25:
                 prize_list = "silver\n(${})".format(2*stakes_multiplier)
-                prize = PhotoImage(file="silver_low.gif")
+                prize = PhotoImage(file="Mystery-Box\silver_low.gif")
                 round_winnings += 2*stakes_multiplier
             elif 25 < prize_num <= 65:
                 prize_list = "copper\n(${})".format(1*stakes_multiplier)
-                prize = PhotoImage(file="copper_low.gif")
+                prize = PhotoImage(file="Mystery-Box\copper_low.gif")
                 round_winnings += stakes_multiplier
             else:
                 prize_list = "lead\n($0)"
-                prize = PhotoImage(file="lead.gif")
+                prize = PhotoImage(file="Mystery-Box\lead.gif")
             prizes.append(prize)
             stats_prizes.append(prize_list)
         

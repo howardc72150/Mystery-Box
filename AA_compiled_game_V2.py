@@ -194,7 +194,8 @@ class Game:
         self.help_export_frame.grid(row=5, pady=10)
 
         self.help_button = Button(self.help_export_frame, text="Help / Rules",
-                                  font=("Verdana 15 bold"), bg="#808080", fg="white")
+                                  font=("Verdana 15 bold"), bg="#808080", fg="white",
+                                  command=self.to_help)
         self.help_button.grid(row=0, column=0, padx=2)
 
         self.stats_button = Button(self.help_export_frame, text="Game Stats",
@@ -206,6 +207,9 @@ class Game:
                                   font=("Verdana 15 bold"), width=20, command=self.to_quit,
                                   padx=10, pady=10)
         self.quit_button.grid(row=6, pady=10)
+
+    def to_help(self):
+        get_help = Help(self)
 
     def reveal_boxes(self):
             # Retrieve the balance from initial function.
@@ -280,6 +284,53 @@ class Game:
     def to_quit(self):
         root.destroy()
     
+class Help:
+    def __init__(self, partner):
+
+        # Disable help button.
+        partner.help_button.config(state=DISABLED)
+
+        # Sets up child window
+        self.help_box = Toplevel()
+
+        # If users press cross at top, closes help and releases help button.
+        self.help_box.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
+
+        # Setup GUI frame
+        self.help_frame = Frame(self.help_box, width=300)
+        self.help_frame.grid()
+
+        # Set up help heading
+        self.how_heading = Label(self.help_frame, text="Help / Instructions",
+                                font="Verdana 14 bold")
+        self.how_heading.grid(row=0)
+
+        help_text = "Choose an amount to play with and then choose the stakes. " \
+                    "Higher stakes cost more per round but you can win more as " \
+                    "well.\n\n" \
+                    "When you enter the play area, you will see three mystery " \
+                    "boxes. To reveal the contents of the boxes, click the " \
+                    "'Open Boxes' button. If you don't have enough money to play, " \
+                    "the button will turn red and you will need to quit the " \
+                    "game.\n\n" \
+                    "The contents of the boxes will be added to your balance. " \
+                    "The boxes could contain..\n\n" \
+                    "Low: Lead ($0) | Copper ($1) | Silver ($2) | Gold ($10)\n" \
+                    "Medium: Lead ($0) | Copper ($2) | Silver ($4) | Gold ($25)\n" \
+                    "High: Lead ($0) | Copper ($5) | Silver ($10) | Gold ($50)\n\n" \
+                    "If each box contains gold, you earn $30 (low stakes). If " \
+                    "they contained copper, silver and gold you would receive " \
+                    "$13 ($1 + $2 + $10) and so on."
+        
+        self.help_text = Label(self.help_frame, text=help_text,
+                               justify=LEFT, wrap=100, padx=10, pady=10)
+        self.help_text.grid(row=1)
+
+        # Dismiss button
+        self.dismiss_btn = Button(self.help_frame, text="Dismiss",
+                                  width=10, bg="#660000", fg="white",
+                                  font="Verdana 15 bold")
+
 # Main routine
 if __name__ == "__main__":
     root = Tk()

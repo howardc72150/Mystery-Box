@@ -52,8 +52,58 @@ class GameStats:
         self.stats_heading_label = Label(self.stats_frame, text="Game Statistics", font="Verdana 19 bold")
         self.stats_heading_label.grid(row=0)
 
+            # to export instructions
+        self.export_instructions = Label(self.stats_frame, text="Here are your Game Statistics. Please use the Export button to access the results"
+                                         "of each round that you played.", wrap=250,font="Verdana 10 italic", justify=LEFT, fg="green", padx=10, pady=10)
+        self.export_instructions.grid(row=1)
+
+            # starting balance
+        self.details_frame = Frame(self.stats_frame)
+        self.details_frame.grid(row=2)
+
+        self.start_balance_label = Label(self.details_frame, text="Starting Balance:", font=heading, anchor="e")
+        self.start_balance_label.grid(row=0, column=0, padx=0)
+        
+        self.start_balance_value_label = Label(self.details_frame, font=content, text="${}".format(game_stats[0]), anchor="w")
+        self.start_balance_value_label.grid(row=0, column=1, padx=0)
+
+            # current balance
+        self.current_balance_label = Label(self.details_frame, text="Current Balance:", font=heading, anchor="e")
+        self.current_balance_label.grid(row=1,column=0,padx=10)
+
+        self.current_balance_value_label = Label(self.details_frame, font=content, text="${}".format(game_stats[1]))
+        self.current_balance_value_label.grid(row=1,column=1,padx=0)
+
+        if game_stats[1] > game_stats[0]:
+            win_loss = "Amount Won:"
+            amount = game_stats[1] - game_stats[0]
+            win_loss_fg = "green"
+        else:
+            win_loss = "Amount Lost:"
+            amount = game_stats[0] - game_stats[1]
+            win_loss_fg = "#660000"
+        
+            # amount won or lost
+        self.wind_loss_label = Label(self.details_frame, text=win_loss, font=heading, anchor="e")
+        self.wind_loss_label.grid(row=2,column=0,padx=0)
+
+        self.wind_loss_value_label = Label(self.details_frame, font=content, text="${}".format(amount), fg=win_loss_fg, anchor="w")
+        self.wind_loss_value_label.grid(row=2, column=1, padx=0)
+
+            # rounds played
+        self.games_played_label = Label(self.details_frame,text="Rounds Played:", font=heading, anchor="e")
+        self.games_played_label.grid(row=4, column=0, padx=0)
+        
+        self.games_played_value_label = Label(self.details_frame, font=content, text=len(game_history), anchor="w")
+        self.games_played_value_label.grid(row=4, column=1, padx=0)
+
+            # dismiss button
+            
+
+
+
 if __name__ == "__main__":
     root = Tk()
-    root.title("Mystery Box")
-    var = Game(root)
+    root.title("Mystery Box Game")
+    something = Game(root)
     root.mainloop()  

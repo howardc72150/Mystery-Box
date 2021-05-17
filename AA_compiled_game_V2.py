@@ -216,7 +216,7 @@ class Game:
         GameStats(self, game_history, game_stats)
 
     def reveal_boxes(self):
-            # Retrieve the balance from initial function.
+            # Retrieve the balance from initial function
         current_balance = self.balance.get()
         stakes_multiplier = self.multiplier.get()
         

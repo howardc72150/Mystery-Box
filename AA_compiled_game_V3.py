@@ -419,7 +419,7 @@ class GameStats:
         self.dismiss_button.grid(row=5)
 
     def close_stats(self, partner):
-         # Put help button back to normal
+            # Put help button back to normal
         partner.stats_button.config(state=NORMAL)
         self.stats_box.destroy()
 
@@ -428,25 +428,25 @@ class Export:
     def __init__(self, partner, game_history, all_game_stats):
         print(game_history)
 
-        # Disable history button
+            # Disable history button
         partner.history_button.config(state=DISABLED)
 
-        # Creates child window
+            # Creates child window
         self.export_box = Toplevel()
         
-        # If users press cross at top, closes history and 'releases' export button
+            # If users press cross at top, closes history and 'releases' export button
         self.export_box.protocol('WM_DELETE_WINDOW', partial(self.close_export, partner))
 
-        # Set up GUI frame
+            # Set up GUI frame
         self.export_frame = Frame(self.export_box, width=300)
         self.export_frame.grid()
 
-        # Set up history heading (row 0)
+            # Set up history heading (row 0)
         self.how_heading = Label(self.export_frame, text="Export / Instructions",
                                 font=("Verdana", "16", "bold"))
         self.how_heading.grid(row=0)
 
-        # Export instructions
+            # Export instructions
 
 
 # Main routine

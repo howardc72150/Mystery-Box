@@ -200,7 +200,7 @@ class Game:
         self.help_button.grid(row=0, column=0, padx=2)
 
         self.stats_button = Button(self.help_export_frame, text="Game Stats",
-                                   font=("Verdana 15 bold"), bg="#003366", fg="white", command=self.to_stats(self.round_stats_list, self.game_stats_list))
+                                   font=("Verdana 15 bold"), bg="#003366", fg="white", command= lambda:self.to_stats(self.round_stats_list, self.game_stats_list))
         self.stats_button.grid(row=0, column=1, padx=2)
 
             # Quit button
@@ -397,7 +397,7 @@ class GameStats:
             win_loss = "Amount Lost:"
             amount = game_stats[0] - game_stats[1]
             win_loss_fg = "#660000"
-        
+
             # amount won or lost
         self.wind_loss_label = Label(self.details_frame, text=win_loss, font=heading, anchor="e")
         self.wind_loss_label.grid(row=2,column=0,padx=0)
@@ -413,6 +413,16 @@ class GameStats:
         self.games_played_value_label.grid(row=4, column=1, padx=0)
 
             # dismiss button
+        self.dismiss_button = Button(self.details_frame, text="Dismiss",
+                                  width=10, bg="#660000", fg="white",
+                                  font="Verdana 15 bold", command=partial(self.close_stats, partner))
+        self.dismiss_button.grid(row=5)
+
+    def close_stats(self, partner):
+         # Put help button back to normal
+        partner.stats_button.config(state=NORMAL)
+        self.stats_box.destroy()
+
 
 class Export:
     def __init__(self, partner, game_history, all_game_stats):

@@ -1,6 +1,7 @@
 from tkinter import *
 from functools import partial
 import random
+import re
 
 class Start:
     def __init__(self, partner):
@@ -111,9 +112,7 @@ class Start:
             self.start_amount_entry.config(bg=error_bg)
             self.amount_error_label.config(text=error_feedback)
         else:
-            self.starting_funds.set(starting_balance)
-
-
+            self.starting_funds.set(starting_balance)                                                                                     
 
     def to_game(self, stakes):
         starting_balance = self.starting_funds.get()
@@ -226,15 +225,15 @@ class Game:
         for item in range(0,3):
             prize_num = random.randint(1,100)
             if 0 < prize_num <= 5:
-                prize_list = "gold\n(${})".format(5*stakes_multiplier)
+                prize_list = "gold (${})\n".format(5*stakes_multiplier)
                 prize = PhotoImage(file="Mystery-Box\gold_low.gif")
                 round_winnings += 5*stakes_multiplier
             elif 5 < prize_num <= 25:
-                prize_list = "silver\n(${})".format(2*stakes_multiplier)
+                prize_list = "silver (${})\n".format(2*stakes_multiplier)
                 prize = PhotoImage(file="Mystery-Box\silver_low.gif")
                 round_winnings += 2*stakes_multiplier
             elif 25 < prize_num <= 65:
-                prize_list = "copper\n(${})".format(1*stakes_multiplier)
+                prize_list = "copper (${})\n".format(1*stakes_multiplier)
                 prize = PhotoImage(file="Mystery-Box\copper_low.gif")
                 round_winnings += stakes_multiplier
             else:
@@ -412,24 +411,37 @@ class GameStats:
         self.games_played_value_label = Label(self.details_frame, font=content, text=len(game_history), anchor="w")
         self.games_played_value_label.grid(row=4, column=1, padx=0)
 
+
+        # Export and dismiss button frame (row 3)
+        self.export_dismiss_frame = Frame(self.details_frame)
+        self.export_dismiss_frame.grid(row=5, pady=10)
+
+        # Export button
+        self.export_button = Button(self.export_dismiss_frame, text="Export",
+                                    font=("Verdana", "15", "bold"), command=lambda: self.export(game_history, game_stats))
+        self.export_button.grid(row=0, column=0)
+
+
             # dismiss button
-        self.dismiss_button = Button(self.details_frame, text="Dismiss",
+        self.dismiss_button = Button(self.export_dismiss_frame, text="Dismiss",
                                   width=10, bg="#660000", fg="white",
                                   font="Verdana 15 bold", command=partial(self.close_stats, partner))
-        self.dismiss_button.grid(row=5)
+        self.dismiss_button.grid(row=0, column=1)
+
+    def export(self, game_history, game_stats):
+        get_export = Export(self, game_history, game_stats)
 
     def close_stats(self, partner):
             # Put help button back to normal
         partner.stats_button.config(state=NORMAL)
         self.stats_box.destroy()
 
-
 class Export:
     def __init__(self, partner, game_history, all_game_stats):
         print(game_history)
 
             # Disable history button
-        partner.history_button.config(state=DISABLED)
+        partner.export_button.config(state=DISABLED)
 
             # Creates child window
         self.export_box = Toplevel()
@@ -447,6 +459,105 @@ class Export:
         self.how_heading.grid(row=0)
 
             # Export instructions
+        self.export_text = Label(self.export_frame, text="If the filename you enter below"
+                                " already exists, its contents will be replaced with your"
+                                " calculation history", justify=LEFT, wrap=250, width=40)
+        self.export_text.grid(row=1)
+
+            # Warning text (label, row 2)
+        self.export_text = Label(self.export_frame, text="If the filename you enter below"
+                                " already exists, its contents will be replaced with your"
+                                " calculation history", justify=LEFT, bg="#ffafaf", fg="maroon",
+                                font=("Verdana", "10", "italic"), wrap=225, padx=10, pady=10)
+        self.export_text.grid(row=2, pady=10)
+
+        # Filename entry box (row 3)
+        self.filename_entry = Entry(self.export_frame, width=20,font=("Verdana", "10", "italic"),
+                                    justify=CENTER)
+        self.filename_entry.grid(row=3, pady=10)
+        
+        # Error message labels (initially blank, row 4)
+        self.save_error_label = Label(self.export_frame, text="", fg="maroon")
+        self.save_error_label.grid(row=4)
+
+        # Save and cancel frame (row 4)
+        self.save_cancel_frame = Frame(self.export_frame)
+        self.save_cancel_frame.grid(row=5, pady=10)
+
+        # Save and cancel buttons (row 0 of save_Cancel frame)
+        self.save_button = Button(self.save_cancel_frame, text="Save", font=("Verdana", "10", "bold"),
+                                  command=partial(lambda: self.save_history(partner, game_history, all_game_stats)))
+        self.save_button.grid(row=0, column=0)
+
+        self.cancel_button = Button(self.save_cancel_frame, text="Cancel", font=("Verdana", "10", "bold"),
+                                    command=partial(self.close_export, partner))
+        self.cancel_button.grid(row=0, column=1)
+
+    def save_history(self, partner, game_history, all_game_stats):
+        # Regular expression to check filename is valid
+        regex = "[A-Za-z0-9]"
+        has_errors = "no"
+
+        filename = self.filename_entry.get()
+        print(filename)
+
+        for letter in filename:
+            if re.match(regex, letter):
+                continue
+        
+            elif letter == " ":
+                problem = "(no spaces allowed)"
+            
+            else:
+                problem = (" (no {}'s allowed)".format(letter))
+            has_errors = "yes"
+            break
+
+        if filename == "":
+            problem = "can't be blank"
+            has_errors = "yes"
+        
+        if has_errors == "yes":
+            # Display error message
+            self.save_error_label.config(text="Invalid filename - {}".format(problem))
+            # Change entry box background to pink
+            self.filename_entry.config(bg="#ffafaf")
+            print()
+        
+        else:
+            filename = filename + ".txt"
+            f = open(filename, "w+")
+
+            f.write("**** Game Statistics****\n\n")
+            start_balance = all_game_stats[0]
+            final_balance = all_game_stats[1]
+
+            initial_statement = "Starting Balance ${:.2f}\n".format(start_balance)
+            final_statement = "Closing Balance ${:.2f}\n".format(final_balance)
+
+            if start_balance > final_balance:
+                won_loss = "You lost ${:.2f}".format(start_balance-final_balance)
+            elif start_balance < final_balance:
+                won_loss = "You won ${:.2f}".format(final_balance-start_balance)
+            else:
+                won_loss = "You broke even"
+
+            f.write(initial_statement)
+            f.write(final_statement)
+            f.write("\n")
+            f.write(won_loss)
+
+            f.write("\nMystery Box History\n\n")
+
+            for item in game_history:
+                f.write(item + "\n")
+            
+            f.close()
+            self.close_export(partner)
+
+    def close_export(self, partner):
+        partner.export_button.config(state=NORMAL)
+        self.export_box.destroy()
 
 
 # Main routine
